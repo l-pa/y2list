@@ -1,42 +1,32 @@
-// client-side js
-// run by the browser each time your view template is loaded
+document.getElementById("submit").addEventListener("click", function() {
+  //  obj = document.getElementById("input").value.split("\n");
+  var obj = [];
+  document
+    .getElementById("input")
+    .value.split("\n")
+    .forEach(element => {
+      if (element.trim().length != 0) {
+        obj.push({
+          name: element
+        });
+      }
+    });
+  var request = new XMLHttpRequest();
+  request.open("POST", "http://localhost:3000/");
+  request.setRequestHeader("Content-type", "application/json");
 
-console.log('hello world :o');
+  request.send(JSON.stringify(obj));
 
-// our default array of dreams
-const dreams = [
-  'Find and count some sheep',
-  'Climb a really tall mountain',
-  'Wash the dishes'
-];
-
-// define variables that reference elements on our page
-const dreamsList = document.getElementById('dreams');
-const dreamsForm = document.forms[0];
-const dreamInput = dreamsForm.elements['dream'];
-
-// a helper function that creates a list item for a given dream
-const appendNewDream = function(dream) {
-  const newListItem = document.createElement('li');
-  newListItem.innerHTML = dream;
-  dreamsList.appendChild(newListItem);
-}
-
-// iterate through every dream and add it to our page
-dreams.forEach( function(dream) {
-  appendNewDream(dream);
+  request.addEventListener("loadend", function() {
+    document.getElementById("result").innerHTML = "";
+    JSON.parse(request.responseText).forEach(element => {
+      document.getElementById("result").innerHTML +=
+        '<p><a href="' +
+        element.items[0].link +
+        '" target="_blank">' +
+        element.items[0].link +
+        "</a>" +
+        "</p>";
+    });
+  });
 });
-
-// listen for the form to be submitted and add a new dream when it is
-dreamsForm.onsubmit = function(event) {
-  // stop our form submission from refreshing the page
-  event.preventDefault();
-
-  // get dream value and add it to the list
-  dreams.push(dreamInput.value);
-  appendNewDream(dreamInput.value);
-
-  // reset form 
-  dreamInput.value = '';
-  dreamInput.focus();
-};
