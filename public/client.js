@@ -12,10 +12,7 @@ document.getElementById("submit").addEventListener("click", function() {
       }
     });
   var request = new XMLHttpRequest();
-  request.open(
-    "POST",
-    "https://y2list.herokuapp.com/" + process.env.PORT || 3000 + "/"
-  );
+  request.open("POST", "https://y2list.herokuapp.com" + "/");
   request.setRequestHeader("Content-type", "application/json");
 
   request.send(JSON.stringify(obj));
